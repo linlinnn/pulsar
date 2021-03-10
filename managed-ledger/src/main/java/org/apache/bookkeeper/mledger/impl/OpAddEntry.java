@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Handles the life-cycle of an addEntry() operation.
- *
+ * 操作 entry 的代码
  */
 @Slf4j
 public class OpAddEntry extends SafeRunnable implements AddCallback, CloseCallback {

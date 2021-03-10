@@ -179,6 +179,9 @@ import org.apache.zookeeper.data.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Pulsar Broker 服务启动的入口，初始化各种组件
+ */
 @Getter(AccessLevel.PUBLIC)
 @Setter(AccessLevel.PROTECTED)
 public class BrokerService implements Closeable, ZooKeeperCacheListener<Policies> {
@@ -283,6 +286,7 @@ public class BrokerService implements Closeable, ZooKeeperCacheListener<Policies
         this.resumeProducerReadMessagePublishBufferBytes = this.maxMessagePublishBufferBytes / 2;
         this.preciseTopicPublishRateLimitingEnable =
                 pulsar.getConfiguration().isPreciseTopicPublishRateLimiterEnable();
+        // ledger 管理初始化
         this.managedLedgerFactory = pulsar.getManagedLedgerFactory();
         this.topics = new ConcurrentOpenHashMap<>();
         this.replicationClients = new ConcurrentOpenHashMap<>();
@@ -295,10 +299,13 @@ public class BrokerService implements Closeable, ZooKeeperCacheListener<Policies
         this.pulsarStats = new PulsarStats(pulsar);
         this.offlineTopicStatCache = new ConcurrentOpenHashMap<>();
 
+        // 操作 Topic 相关
         this.topicOrderedExecutor = OrderedScheduler.newSchedulerBuilder()
                 .numThreads(pulsar.getConfiguration().getNumWorkerThreadsForNonPersistentTopic())
                 .name("broker-topic-workers").build();
         final DefaultThreadFactory acceptorThreadFactory = new DefaultThreadFactory("pulsar-acceptor");
+
+        // 读写操作相关
         final DefaultThreadFactory workersThreadFactory = new DefaultThreadFactory("pulsar-io");
         final int numThreads = pulsar.getConfiguration().getNumIOThreads();
         log.info("Using {} threads for broker service IO", numThreads);

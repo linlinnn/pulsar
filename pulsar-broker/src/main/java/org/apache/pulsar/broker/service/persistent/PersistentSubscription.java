@@ -74,6 +74,9 @@ import org.apache.pulsar.common.util.FutureUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Subscription 相关代码
+ */
 public class PersistentSubscription implements Subscription {
     protected final PersistentTopic topic;
     protected final ManagedCursor cursor;

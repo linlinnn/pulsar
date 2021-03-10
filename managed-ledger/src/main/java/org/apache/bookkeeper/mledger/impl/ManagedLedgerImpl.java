@@ -131,6 +131,9 @@ import org.apache.pulsar.metadata.api.Stat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 管理 ledger 的代码
+ */
 public class ManagedLedgerImpl implements ManagedLedger, CreateCallback {
     private final static long MegaByte = 1024 * 1024;
 

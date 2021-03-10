@@ -101,6 +101,9 @@ import org.apache.pulsar.common.schema.SchemaType;
 import org.apache.pulsar.common.util.collections.BitSetRecyclable;
 import org.apache.pulsar.common.util.collections.ConcurrentBitSetRecyclable;
 
+/**
+ * 发送前进行相应的命令拼装
+ */
 @UtilityClass
 @Slf4j
 @SuppressWarnings("checkstyle:JavadocType")

@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * ServerCnx 的父类代码，与消费者保持心跳在这里处理
  * Implementation of the channel handler to process inbound Pulsar data.
  */
 public abstract class PulsarHandler extends PulsarDecoder {

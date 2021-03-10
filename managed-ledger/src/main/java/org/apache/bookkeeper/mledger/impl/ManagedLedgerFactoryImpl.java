@@ -87,6 +87,9 @@ import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * ManagedLedgerFactoryImpl 对 ManagedLedgerImpl 进行操作
+ */
 public class ManagedLedgerFactoryImpl implements ManagedLedgerFactory {
     private final MetaStore store;
     private final BookkeeperFactoryForCustomEnsemblePlacementPolicy bookkeeperFactory;

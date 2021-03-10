@@ -65,7 +65,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * pulsar-client consume command implementation.
- *
+ * ./bin/pulsar-client consume 时，需要调用的代码
  */
 @Parameters(commandDescription = "Consume messages from a specified topic")
 public class CmdConsume {

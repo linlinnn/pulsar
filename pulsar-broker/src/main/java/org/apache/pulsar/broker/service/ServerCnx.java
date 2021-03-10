@@ -138,6 +138,9 @@ import org.apache.pulsar.transaction.coordinator.impl.MLTransactionMetadataStore
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 具体的各种逻辑处理的地方，里面有各种 handle 开头的函数，用来路由客户端发送过来的请求
+ */
 public class ServerCnx extends PulsarHandler implements TransportCnx {
     private final BrokerService service;
     private final SchemaRegistryService schemaService;

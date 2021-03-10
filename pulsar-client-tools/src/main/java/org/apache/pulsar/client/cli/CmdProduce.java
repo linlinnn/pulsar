@@ -68,7 +68,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * pulsar-client produce command implementation.
- *
+ * ./bin/pulsar-client produce 时，调用的代码
  */
 @Parameters(commandDescription = "Produce messages to a specified topic")
 public class CmdProduce {

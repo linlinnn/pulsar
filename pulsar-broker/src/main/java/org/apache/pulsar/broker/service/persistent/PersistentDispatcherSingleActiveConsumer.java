@@ -54,6 +54,9 @@ import org.apache.pulsar.common.util.Codec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 独享模式下的相关代码
+ */
 public class PersistentDispatcherSingleActiveConsumer extends AbstractDispatcherSingleActiveConsumer
         implements Dispatcher, ReadEntriesCallback {
 

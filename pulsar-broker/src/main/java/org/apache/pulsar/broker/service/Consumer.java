@@ -59,6 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 服务端的消费者代码
  * A Consumer is a consumer currently connected and associated with a Subscription.
  */
 public class Consumer {

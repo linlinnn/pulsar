@@ -82,6 +82,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * PulsarHandler 的父类代码，实现了 netty 下类 ChannelInboundHandlerAdapter 的 channelRead 方法，处理客户端发过来的各种命令
  * Basic implementation of the channel handler to process inbound Pulsar data.
  */
 public abstract class PulsarDecoder extends ChannelInboundHandlerAdapter {

@@ -55,6 +55,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 服务端的生产者代码
  * Represents a currently connected producer.
  */
 public class Producer {

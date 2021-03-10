@@ -143,6 +143,9 @@ import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Topic 处理代码
+ */
 public class PersistentTopic extends AbstractTopic
         implements Topic, AddEntryCallback, TopicPolicyListener<TopicPolicies> {
 
