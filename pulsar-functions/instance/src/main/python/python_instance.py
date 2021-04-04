@@ -38,6 +38,7 @@ import contextimpl
 import Function_pb2
 import log
 import util
+import topic_schema
 import InstanceCommunication_pb2
 
 # state dependencies
@@ -164,18 +165,27 @@ class PythonInstance(object):
 
     for topic, consumer_conf in self.instance_config.function_details.source.inputSpecs.items():
       if not consumer_conf.serdeClassName:
-        serde_kclass = util.import_class(os.path.dirname(self.user_code), DEFAULT_SERIALIZER)
+        # serde_kclass = util.import_class(os.path.dirname(self.user_code), DEFAULT_SERIALIZER)
+        schema = topic_schema.get_schema(consumer_conf)
       else:
-        serde_kclass = util.import_class(os.path.dirname(self.user_code), consumer_conf.serdeClassName)
-      self.input_serdes[topic] = serde_kclass()
+        # serde_kclass = util.import_class(os.path.dirname(self.user_code), consumer_conf.serdeClassName)
+        schema = topic_schema.serde_schema(os.path.dirname(self.user_code), consumer_conf.serdeClassName)
+      # self.input_serdes[topic] = serde_kclass()
       Log.debug("Setting up consumer for topic %s with subname %s" % (topic, subscription_name))
 
       consumer_args = {
         "consumer_type": mode,
+        "schema": schema(),
         "message_listener": partial(self.message_listener, self.input_serdes[topic]),
         "unacked_messages_timeout_ms": int(self.timeout_ms) if self.timeout_ms else None,
         "properties": properties
       }
+      # consumer_args = {
+      #   "consumer_type": mode,
+      #   "message_listener": partial(self.message_listener, self.input_serdes[topic]),
+      #   "unacked_messages_timeout_ms": int(self.timeout_ms) if self.timeout_ms else None,
+      #   "properties": properties
+      # }
       if consumer_conf.HasField("receiverQueueSize"):
         consumer_args["receiver_queue_size"] = consumer_conf.receiverQueueSize.value
 
@@ -223,7 +233,8 @@ class PythonInstance(object):
           break
         Log.debug("Got a message from topic %s" % msg.topic)
         # deserialize message
-        input_object = msg.serde.deserialize(msg.message.data())
+        # input_object = msg.serde.deserialize(msg.message.data())
+        input_object = msg.message.data()
         # set current message in context
         self.contextimpl.set_current_message_context(msg.message, msg.topic)
         output_object = None
@@ -286,11 +297,11 @@ class PythonInstance(object):
         self.setup_producer()
 
       # serialize function output
-      output_bytes = self.output_serde.serialize(output)
+      # output_bytes = self.output_serde.serialize(output)
 
-      if output_bytes is not None:
-        props = {"__pfn_input_topic__" : str(msg.topic), "__pfn_input_msg_id__" : base64ify(msg.message.message_id().serialize())}
-        self.producer.send_async(output_bytes, partial(self.done_producing, msg.consumer, msg.message, self.producer.topic()), properties=props)
+      # if output_bytes is not None:
+      props = {"__pfn_input_topic__" : str(msg.topic), "__pfn_input_msg_id__" : base64ify(msg.message.message_id().serialize())}
+      self.producer.send_async(output, partial(self.done_producing, msg.consumer, msg.message, self.producer.topic()), properties=props)
     elif self.auto_ack and self.atleast_once:
       msg.consumer.acknowledge(msg.message)
 
@@ -316,8 +327,13 @@ class PythonInstance(object):
         if batch_builder == "KEY_BASED":
           batch_type = pulsar.BatchingType.KeyBased
 
+      if not self.instance_config.function_details.sink.schemaType:
+        schema = topic_schema.get_schema(self.instance_config.function_details.sink)
+      else:
+        schema = topic_schema.serde_schema(os.path.dirname(self.user_code), self.instance_config.function_details.sink.serDeClassName)
       self.producer = self.pulsar_client.create_producer(
         str(self.instance_config.function_details.sink.topic),
+        schema=schema,
         block_if_queue_full=True,
         batching_enabled=True,
         batching_type=batch_type,

@@ -116,3 +116,15 @@ class AvroSchema(Schema):
         buffer = io.BytesIO(data)
         d = fastavro.schemaless_reader(buffer, self._schema)
         return self._record_cls(**d)
+
+class SerDeSchema(Schema):
+    def __init__(self, ser_de):
+        super(SerDeSchema, self).__init__(bytes, _pulsar.SchemaType.SER_DE, None, 'SER_DE')
+        self.ser_de = ser_de
+
+    def encode(self, data):
+        self._validate_object_type(data)
+        return self.ser_de.deserialize(data)
+
+    def decode(self, data):
+        return self.ser_de.serialize(data)

@@ -61,6 +61,8 @@ PULSAR_PUBLIC const char *strSchemaType(SchemaType schemaType) {
             return "AUTO_PUBLISH";
         case KEY_VALUE:
             return "KEY_VALUE";
+        case SER_DE
+            return "SER_DE";
     };
     // NOTE : Do not add default case in the switch above. In future if we get new cases for
     // Schema and miss them in the switch above we would like to get notified. Adding

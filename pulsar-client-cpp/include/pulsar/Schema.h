@@ -90,6 +90,11 @@ enum SchemaType
     KEY_VALUE = 15,
 
     /**
+     * Serialize and deserialize
+     */
+    SER_DE = 16
+
+    /**
      * A bytes array.
      */
     BYTES = -1,
