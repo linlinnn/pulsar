@@ -18,24 +18,14 @@
  */
 package org.apache.pulsar.client.impl.schema;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.pulsar.client.api.Schema;
-import org.apache.pulsar.client.api.SchemaSerializationException;
-import org.apache.pulsar.client.api.schema.GenericRecord;
-import org.apache.pulsar.client.api.schema.SchemaInfoProvider;
-import org.apache.pulsar.client.impl.schema.generic.GenericProtobufNativeSchema;
-import org.apache.pulsar.client.impl.schema.generic.GenericSchemaImpl;
-import org.apache.pulsar.common.schema.KeyValue;
-import org.apache.pulsar.common.schema.SchemaInfo;
-import org.apache.pulsar.common.schema.SchemaType;
-
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import static com.google.common.base.Preconditions.checkState;
+import static com.google.common.base.Preconditions.*;
+import java.util.*;
+import java.util.concurrent.*;
+import lombok.extern.slf4j.*;
+import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.api.schema.*;
+import org.apache.pulsar.client.impl.schema.generic.*;
+import org.apache.pulsar.common.schema.*;
 
 /**
  * Auto detect schema, returns only GenericRecord instances.
@@ -133,7 +123,7 @@ public class AutoConsumeSchema implements Schema<GenericRecord> {
         switch (schemaInfo.getType()) {
             case JSON:
             case AVRO:
-                return GenericSchemaImpl.of(schemaInfo,useProvidedSchemaAsReaderSchema);
+                return GenericSchemaImpl.of(schemaInfo, useProvidedSchemaAsReaderSchema);
             case PROTOBUF_NATIVE:
                 return GenericProtobufNativeSchema.of(schemaInfo, useProvidedSchemaAsReaderSchema);
             default:

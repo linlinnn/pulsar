@@ -911,6 +911,7 @@ public class MultiTopicsConsumerImpl<T> extends ConsumerBase<T> {
         if (numPartitions > 0) {
             // Below condition is true if subscribeAsync() has been invoked second time with same
             // topicName before the first invocation had reached this point.
+            // 这个topic可能已经被其他的线程订阅了
             boolean isTopicBeingSubscribedForInOtherThread = this.topics.putIfAbsent(topicName, numPartitions) != null;
             if (isTopicBeingSubscribedForInOtherThread) {
                 String errorMessage = String.format("[%s] Failed to subscribe for topic [%s] in topics consumer. "
@@ -919,6 +920,7 @@ public class MultiTopicsConsumerImpl<T> extends ConsumerBase<T> {
                 subscribeResult.completeExceptionally(new PulsarClientException(errorMessage));
                 return;
             }
+            // partition 计数+numPartitions
             allTopicPartitionsNumber.addAndGet(numPartitions);
 
             int receiverQueueSize = Math.min(conf.getReceiverQueueSize(),
@@ -930,6 +932,7 @@ public class MultiTopicsConsumerImpl<T> extends ConsumerBase<T> {
                 .range(0, numPartitions)
                 .mapToObj(
                     partitionIndex -> {
+                        // topic-partition-index
                         String partitionName = TopicName.get(topicName).getPartition(partitionIndex).toString();
                         CompletableFuture<Consumer<T>> subFuture = new CompletableFuture<>();
                         ConsumerImpl<T> newConsumer = ConsumerImpl.newConsumerImpl(client, partitionName,

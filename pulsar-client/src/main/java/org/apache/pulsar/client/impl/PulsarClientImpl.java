@@ -986,6 +986,13 @@ public class PulsarClientImpl implements PulsarClient {
         return memoryLimitController;
     }
 
+    /**
+     * 订阅topic前预处理schema
+     * @param pulsarClientImpl
+     * @param schema 用户传的schema
+     * @param topicName
+     * @return
+     */
     @SuppressWarnings("unchecked")
     protected <T> CompletableFuture<Schema<T>> preProcessSchemaBeforeSubscribe(PulsarClientImpl pulsarClientImpl,
                                                                       Schema<T> schema,
