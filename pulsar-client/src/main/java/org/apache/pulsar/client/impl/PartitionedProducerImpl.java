@@ -262,6 +262,12 @@ public class PartitionedProducerImpl<T> extends ProducerBase<T> {
         return closeFuture;
     }
 
+    /**
+     * TODO ISSUE 10100 这里有多线程并发的问题
+     * ProducerStats stats = producer.getStats();
+     * // accessing an object that is mutated from a different thread
+     * long totalMsgsSent = stats.getTotalMsgsSent();
+     */
     @Override
     public synchronized ProducerStatsRecorderImpl getStats() {
         if (stats == null) {
